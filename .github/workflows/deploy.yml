@@ -1,5 +1,8 @@
 name: Deploy
 
+env:
+  STORE_PATH:
+
 on:
   push:
     branches: ['main']
