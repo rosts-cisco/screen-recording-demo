@@ -1,0 +1,20 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
+
+  "eslint.validate": ["typescript", "typescriptreact"],
+
+  // Tailwind
+  "tailwindCSS.files.exclude": ["**/.git/**", "**/node_modules/**", "**/dist/**"],
+  "tailwindCSS.experimental.classRegex": [["tw\\(([^)]*)\\)"]],
+  "tailwindCSS.colorDecorators": false,
+
+  "editor.inlineSuggest.enabled": true,
+  "editor.quickSuggestions": { "strings": true },
+
+  "files.associations": { "*.css": "tailwindcss" }
+}
