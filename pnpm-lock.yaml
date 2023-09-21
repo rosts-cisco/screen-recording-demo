@@ -16,6 +16,9 @@ dependencies:
     version: 18.2.0(react@18.2.0)
 
 devDependencies:
+  '@types/node':
+    specifier: ^20.6.3
+    version: 20.6.3
   '@types/react':
     specifier: ^18.2.15
     version: 18.2.16
@@ -66,7 +69,7 @@ devDependencies:
     version: 5.1.6
   vite:
     specifier: ^4.4.5
-    version: 4.4.7
+    version: 4.4.7(@types/node@20.6.3)
 
 packages:
 
@@ -518,6 +521,10 @@ packages:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
     dev: true
 
+  /@types/node@20.6.3:
+    resolution: {integrity: sha512-HksnYH4Ljr4VQgEy2lTStbCKv/P590tmPe5HqOnv9Gprffgv5WXAY+Y5Gqniu0GGqeTCUdBnzC3QSrzPkBkAMA==}
+    dev: true
+
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: true
@@ -682,7 +689,7 @@ packages:
       vite: ^4
     dependencies:
       '@swc/core': 1.3.71
-      vite: 4.4.7
+      vite: 4.4.7(@types/node@20.6.3)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
@@ -2119,7 +2126,7 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite@4.4.7:
+  /vite@4.4.7(@types/node@20.6.3):
     resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -2147,6 +2154,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.6.3
       esbuild: 0.18.17
       postcss: 8.4.27
       rollup: 3.26.3
