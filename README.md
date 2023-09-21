@@ -1,4 +1,6 @@
 # screen-recording-demo
 
-pnpm install  
+```console
+pnpm install
 pnpm run dev
+```
