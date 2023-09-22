@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { clsx as tw } from 'clsx';
-import { useAudioAnimation, useInit, usePermissionChecker } from './hooks';
+import { useAudioAnimation, useInit, useDevicePermission } from './hooks';
 
 type StopReason = 'click' | 'inactive' | 'ended' | 'change' | 'permissions';
 
@@ -20,7 +20,11 @@ type StopReason = 'click' | 'inactive' | 'ended' | 'change' | 'permissions';
 export function App() {
   const { isDevices, isPermissions, mimeType, userAgent } = useInit();
 
-  const { cameras, mics } = usePermissionChecker(isDevices, isPermissions, 2000);
+  const { cameras, mics, checkDevicePermission } = useDevicePermission(
+    isDevices,
+    isPermissions,
+    2000,
+  );
 
   // SCREEN
   // ---------------------
@@ -130,14 +134,17 @@ export function App() {
     cameraStreamSet(null);
   }, []);
 
+  const [isCameraAsk, isCameraAskSet] = useState(false);
   const onCameraAsk = useCallback(() => {
+    isCameraAskSet(true);
     navigator.mediaDevices
       .getUserMedia({
         audio: false,
         video: true,
       })
       .then(() => {})
-      .catch(err => console.log(err.name + ': ' + err.message));
+      .catch(err => console.log(err.name + ': ' + err.message))
+      .finally(() => isCameraAskSet(false));
   }, []);
 
   // MICROPHONE
@@ -185,15 +192,23 @@ export function App() {
     micStreamSet(null);
   }, []);
 
+  const [isMicAsk, isMicAskSet] = useState(false);
   const onMicAsk = useCallback(() => {
+    isMicAskSet(true);
     navigator.mediaDevices
       .getUserMedia({
         video: false,
         audio: true,
       })
-      .then(() => {})
-      .catch(err => console.log(err.name + ': ' + err.message));
-  }, []);
+      .then(() => {
+        console.log('Mic access granted');
+        checkDevicePermission();
+      })
+      .catch(err => {
+        console.log(err.name + ': ' + err.message);
+      })
+      .finally(() => isMicAskSet(false));
+  }, [checkDevicePermission]);
 
   const refAudioVolume = useRef<HTMLDivElement>(null!);
   useAudioAnimation(micStream, refAudioVolume);
@@ -201,6 +216,9 @@ export function App() {
   return (
     <main className='pt-2 pb-12'>
       <div className='text-xs text-slate-400 text-center'>{userAgent}</div>
+      <button className={btn} onClick={checkDevicePermission}>
+        CHECK
+      </button>
 
       <div className='mx-auto w-[400px] flex flex-col gap-8 mt-8'>
         {/* SCREEN */}
@@ -240,7 +258,7 @@ export function App() {
             ) : cameras == 'denied' ? (
               <div>Camera access denied</div>
             ) : cameras == 'prompt' ? (
-              <button className={btn} onClick={() => onCameraAsk()}>
+              <button className={btn} disabled={isCameraAsk} onClick={() => onCameraAsk()}>
                 Ask Permissions
               </button>
             ) : (
@@ -283,7 +301,7 @@ export function App() {
             ) : mics == 'denied' ? (
               <div>Microphone access denied</div>
             ) : mics == 'prompt' ? (
-              <button className={btn} onClick={() => onMicAsk()}>
+              <button className={btn} disabled={isMicAsk} onClick={() => onMicAsk()}>
                 Ask Permissions
               </button>
             ) : (

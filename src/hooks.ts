@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getSupportedMimeTypes } from './utils';
+import { useCallback } from 'react';
 
 type Devices = { id: string; name: string }[] | 'denied' | 'prompt' | null;
 
@@ -64,53 +65,58 @@ export function useInit() {
   return { isPermissions, isDevices, userAgent, mimeType };
 }
 
-export function usePermissionChecker(isDevices: boolean, isPermissions: boolean, delay: number) {
+// Check devices - safari camplatible
+// ----------------------------------
+
+export function useDevicePermission(isDevices: boolean, isPermissions: boolean, delay: number) {
   const refTimer = useRef<number>(null!);
 
   const [cameras, camerasSet] = useState<Devices>(null);
   const [mics, micsSet] = useState<Devices>(null);
 
-  useEffect(() => {
-    const tick = () => {
-      if (isPermissions && isDevices) {
-        Promise.all([
-          navigator.permissions.query({ name: 'camera' as unknown as PermissionName }),
-          navigator.permissions.query({ name: 'microphone' as unknown as PermissionName }),
-          navigator.mediaDevices.enumerateDevices(),
-        ]).then(([camera, mic, devices]) => {
-          const cameras =
-            camera.state == 'granted'
-              ? devices
-                  .filter(d => d.kind === 'videoinput')
-                  .map(d => ({ id: d.deviceId, name: d.label }))
-              : camera.state;
+  const checkDevicePermission = useCallback(() => {
+    if (isPermissions && isDevices) {
+      Promise.all([
+        navigator.permissions.query({ name: 'camera' as unknown as PermissionName }),
+        navigator.permissions.query({ name: 'microphone' as unknown as PermissionName }),
+        navigator.mediaDevices.enumerateDevices(),
+      ]).then(([camera, mic, devices]) => {
+        const cameras =
+          camera.state == 'granted'
+            ? devices
+                .filter(d => d.kind === 'videoinput')
+                .map(d => ({ id: d.deviceId, name: d.label }))
+            : camera.state;
 
-          const mics =
-            mic.state == 'granted'
-              ? devices
-                  .filter(d => d.kind === 'audioinput')
-                  .map(d => ({ id: d.deviceId, name: d.label }))
-              : mic.state;
+        const mics =
+          mic.state == 'granted'
+            ? devices
+                .filter(d => d.kind === 'audioinput')
+                .map(d => ({ id: d.deviceId, name: d.label }))
+            : mic.state;
 
-          //  console.log(cameras, mics);
+        console.log(cameras, mics);
 
-          camerasSet(cameras);
-          micsSet(mics);
-        });
-      } else if (isDevices) {
-        console.log('PERMISSIONS DISABLED');
-      }
+        camerasSet(cameras);
+        micsSet(mics);
+      });
+    } else if (isDevices) {
+      console.log('PERMISSIONS DISABLED');
+    }
 
-      refTimer.current = window.setTimeout(tick, delay);
-    };
-
-    tick();
-
-    return () => window.clearTimeout(refTimer.current);
+    refTimer.current = window.setTimeout(checkDevicePermission, delay);
   }, [delay, isDevices, isPermissions]);
 
-  return { cameras, mics };
+  useEffect(() => {
+    checkDevicePermission();
+    return () => window.clearTimeout(refTimer.current);
+  }, [checkDevicePermission]);
+
+  return { cameras, mics, checkDevicePermission };
 }
+
+// Vizualize Audio stream
+// ----------------------
 
 export function useAudioAnimation(
   stream: MediaStream | null,
