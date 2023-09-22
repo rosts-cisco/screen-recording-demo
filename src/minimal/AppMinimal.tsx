@@ -1,16 +1,23 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export function App() {
+export function AppMinimal() {
   const [isStream, isStreamSet] = useState(false);
+  const [bytes, bytesSet] = useState(0);
 
   const onStartScreen = useCallback(() => {
     REC.start();
     isStreamSet(true);
+    bytesSet(0);
   }, []);
 
   const onStopScreen = useCallback(() => {
     REC.stop();
     isStreamSet(false);
+    bytesSet(0);
+  }, []);
+
+  useEffect(() => {
+    REC.onBytes(bb => bytesSet(b => b + bb));
   }, []);
 
   return (
@@ -29,6 +36,7 @@ export function App() {
           STOP SCREEN
         </button>
       </div>
+      {bytes > 0 && <div className='flex gap-3 justify-center'>Recording: {bytes} bytes</div>}
     </main>
   );
 }
@@ -87,12 +95,20 @@ class Recorder {
     }
   }
 
-  onData = (blob: BlobEvent) => console.log('MediaRecorder:', blob.data.size, blob.data.type);
-  onError = () => console.log('MediaRecorder: ERRROR');
+  private _onBytes: ((bytes: number) => void) | null = null;
+  onBytes(cb: (bytes: number) => void) {
+    this._onBytes = cb;
+  }
 
-  onEnded = () => console.log('Track: ended');
-  onMute = () => console.log('Track: mute');
-  onUnmute = () => console.log('Track: unmute');
+  private onData = (blob: BlobEvent) => {
+    console.log('MediaRecorder:', blob.data.size, blob.data.type);
+    this._onBytes && this._onBytes(blob.data.size);
+  };
+  private onError = () => console.log('MediaRecorder: ERRROR');
+
+  private onEnded = () => console.log('Track: ended');
+  private onMute = () => console.log('Track: mute');
+  private onUnmute = () => console.log('Track: unmute');
 }
 
 const REC = new Recorder();
