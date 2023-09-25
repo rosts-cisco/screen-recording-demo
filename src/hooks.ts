@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getSupportedMimeTypes } from './utils';
 import { useCallback } from 'react';
 
-type Devices = { id: string; name: string }[] | 'denied' | 'prompt' | null;
+type Devices = { id: string; name: string }[] | 'denied' | 'prompt';
 
 export function useInit() {
   const once = useRef(true);
@@ -73,10 +73,9 @@ export function useInit() {
 export function useDevicePermission(isDevices: boolean, isPermissions: boolean, delay: number) {
   const refTimer = useRef<number>(null!);
 
-  const [cameras, camerasSet] = useState<Devices>(null);
-  const [mics, micsSet] = useState<Devices>(null);
+  const [cameras, camerasSet] = useState<Devices | null>(null);
+  const [mics, micsSet] = useState<Devices | null>(null);
 
-  // TODO - make it as Promise
   const checkDevicePermission = useCallback(() => {
     if (isPermissions && isDevices) {
       Promise.all([
@@ -100,8 +99,38 @@ export function useDevicePermission(isDevices: boolean, isPermissions: boolean, 
 
         // console.log(cameras, mics);
 
-        camerasSet(cameras);
-        micsSet(mics);
+        // update devices only if they change
+        camerasSet(camerasPrev => {
+          const c1 = Array.isArray(cameras)
+            ? cameras
+                .map(c => c.id)
+                .sort((a, b) => a.localeCompare(b))
+                .join()
+            : cameras;
+          const c2 = Array.isArray(camerasPrev)
+            ? camerasPrev
+                .map(c => c.id)
+                .sort((a, b) => a.localeCompare(b))
+                .join()
+            : camerasPrev;
+          return c1 != c2 ? cameras : camerasPrev;
+        });
+
+        micsSet(micsPrev => {
+          const c1 = Array.isArray(mics)
+            ? mics
+                .map(c => c.id)
+                .sort((a, b) => a.localeCompare(b))
+                .join()
+            : mics;
+          const c2 = Array.isArray(micsPrev)
+            ? micsPrev
+                .map(c => c.id)
+                .sort((a, b) => a.localeCompare(b))
+                .join()
+            : micsPrev;
+          return c1 != c2 ? mics : micsPrev;
+        });
       });
     } else if (isDevices) {
       console.log('PERMISSIONS DISABLED');

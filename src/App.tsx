@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { clsx as tw } from 'clsx';
 import { useAudioAnimation, useInit, useDevicePermission } from './hooks';
 
@@ -121,7 +121,7 @@ export function App() {
   // ---------------------
 
   const [camera, cameraSet] = useState<Media | null>(null);
-  const [cameraId, cameraIdSet] = useState('');
+  const [cameraId, cameraIdSet] = useState<string | null>(null);
 
   const refCamera = useRef<HTMLVideoElement>(null!);
 
@@ -193,7 +193,9 @@ export function App() {
         s.getTracks().forEach(t => t.stop());
         console.log('Camera access granted');
       })
-      .catch(err => console.log('Camera access error: ' + err))
+      .catch(err => {
+        console.log('Camera access error: ' + err);
+      })
       .finally(() => {
         checkDevicePermission();
         isCameraAskSet(false);
@@ -204,7 +206,7 @@ export function App() {
   // ---------------------
 
   const [mic, micSet] = useState<Media | null>(null);
-  const [micId, micIdSet] = useState('');
+  const [micId, micIdSet] = useState<string | null>(null);
 
   const onMicStop = useCallback(
     (media: Media, reason: StopReason) => {
@@ -272,12 +274,39 @@ export function App() {
         console.log('Mic access granted');
         s.getTracks().forEach(t => t.stop());
       })
-      .catch(err => console.log('Mic access error: ' + err))
+      .catch(err => {
+        console.log('Mic access error: ' + err);
+      })
       .finally(() => {
         checkDevicePermission();
         isMicAskSet(false);
       });
   }, [checkDevicePermission]);
+
+  // ----
+
+  useEffect(() => {
+    cameraIdSet(currentCameraId => {
+      const isCameras = Array.isArray(cameras);
+      console.log(currentCameraId, cameras);
+
+      if (isCameras && currentCameraId != null) {
+        const isCameraId = Boolean(cameras.find(c => c.id == currentCameraId));
+        console.log('BUM', isCameraId);
+        return isCameraId ? currentCameraId : cameras[0].id;
+      }
+      return null;
+    });
+
+    micIdSet(currentMicId => {
+      const isMics = Array.isArray(mics);
+      if (isMics && currentMicId != null) {
+        const isMicId = Boolean(mics.find(c => c.id == currentMicId));
+        return isMicId ? currentMicId : mics[0].id;
+      }
+      return null;
+    });
+  }, [cameras, mics]);
 
   const refAudioVolume = useRef<HTMLDivElement>(null!);
   useAudioAnimation(mic?.stream || null, refAudioVolume);
@@ -332,7 +361,7 @@ export function App() {
               </button>
             ) : (
               <select
-                className='bg-slate-100'
+                className='bg-slate-100 disabled:opacity-50'
                 disabled={camera != null}
                 onChange={v => cameraIdSet(v.currentTarget.value)}>
                 {cameras.map(({ id, name }) => (
@@ -372,7 +401,7 @@ export function App() {
               </button>
             ) : (
               <select
-                className='bg-slate-100'
+                className='bg-slate-100 disabled:opacity-50'
                 disabled={mic != null}
                 onChange={v => micIdSet(v.currentTarget.value)}>
                 {mics.map(({ id, name }) => (
