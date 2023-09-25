@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export function AppMinimal() {
   const [isStream, isStreamSet] = useState(false);
@@ -20,9 +20,13 @@ export function AppMinimal() {
     REC.onBytes(bb => bytesSet(b => b + bb));
   }, []);
 
+  const userAgent = useMemo(() => navigator.userAgent, []);
+
   return (
     <main className='pt-2 pb-12'>
-      <div className='flex gap-3 justify-center'>
+      <div className='text-xs text-slate-400 text-center'>{userAgent}</div>
+
+      <div className='flex gap-3 mt-4 justify-center'>
         <button
           className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
           disabled={isStream}

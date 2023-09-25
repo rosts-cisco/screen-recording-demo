@@ -37,7 +37,7 @@ export function useInit() {
       ]).then(([devices, camera, mic]) => {
         if (camera.status == 'fulfilled' && mic.status == 'fulfilled') {
           isPermissionsSet(true);
-          console.warn('navigator.permissions.query', true);
+          console.log('navigator.permissions.query', true);
         }
 
         if (camera.status == 'rejected') {
@@ -52,7 +52,7 @@ export function useInit() {
 
         if (devices.status == 'fulfilled') {
           isDevicesSet(true);
-          console.warn('navigator.mediaDevices.enumerateDevices', true);
+          console.log('navigator.mediaDevices.enumerateDevices', true);
         }
 
         if (devices.status == 'rejected') {
