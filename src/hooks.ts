@@ -37,6 +37,7 @@ export function useInit() {
       ]).then(([devices, camera, mic]) => {
         if (camera.status == 'fulfilled' && mic.status == 'fulfilled') {
           isPermissionsSet(true);
+          console.warn('navigator.permissions.query', true);
         }
 
         if (camera.status == 'rejected') {
@@ -51,6 +52,7 @@ export function useInit() {
 
         if (devices.status == 'fulfilled') {
           isDevicesSet(true);
+          console.warn('navigator.mediaDevices.enumerateDevices', true);
         }
 
         if (devices.status == 'rejected') {
@@ -74,6 +76,7 @@ export function useDevicePermission(isDevices: boolean, isPermissions: boolean, 
   const [cameras, camerasSet] = useState<Devices>(null);
   const [mics, micsSet] = useState<Devices>(null);
 
+  // TODO - make it as Promise
   const checkDevicePermission = useCallback(() => {
     if (isPermissions && isDevices) {
       Promise.all([
@@ -95,7 +98,7 @@ export function useDevicePermission(isDevices: boolean, isPermissions: boolean, 
                 .map(d => ({ id: d.deviceId, name: d.label }))
             : mic.state;
 
-        console.log(cameras, mics);
+        // console.log(cameras, mics);
 
         camerasSet(cameras);
         micsSet(mics);
@@ -104,6 +107,7 @@ export function useDevicePermission(isDevices: boolean, isPermissions: boolean, 
       console.log('PERMISSIONS DISABLED');
     }
 
+    window.clearTimeout(refTimer.current);
     refTimer.current = window.setTimeout(checkDevicePermission, delay);
   }, [delay, isDevices, isPermissions]);
 
@@ -151,6 +155,7 @@ export function useAudioAnimation(
 
         refDiv.current.style.width = (volume + 0.01) * 400 + '%';
       }
+      cancelAnimationFrame(refAnim.current);
       refAnim.current = requestAnimationFrame(animate);
     };
 
