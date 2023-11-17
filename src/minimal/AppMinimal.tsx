@@ -26,6 +26,20 @@ export function AppMinimal() {
     <main className='pt-2 pb-12'>
       <div className='text-xs text-slate-400 text-center'>{userAgent}</div>
 
+      <div className='text-center'>
+        <a href='webexteams://im?space=7caf1850-4e64-11ee-a9b7-9908175fac12'>WEBEX DEEP LINK</a>
+      </div>
+
+      <div className='text-center'>
+        <a href='vscode://file/Users/rost/Desktop/cisco_spark_enable_webinspector.txt'>
+          VSCODE DEEP LINK
+        </a>
+      </div>
+
+      <div className='text-center'>
+        <a href='vidcast://webex?space=7caf1850-4e64-11ee-a9b7-9908175fac12'>VIDCAST DEEP LINK</a>
+      </div>
+
       <div className='flex gap-3 mt-4 justify-center'>
         <button
           className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
