@@ -23,28 +23,11 @@ export function AppMessage() {
     isListeningSet(true);
 
     return () => {
-      window.removeEventListener('message', handler);
+      window.parent.removeEventListener('message', handler);
       if (window.top) {
         window.top.removeEventListener('message', handlerTop);
       }
     };
-
-    // window.addEventListener('message', (event) => {
-    //   if (event.origin !== this.config.studioUrl) {
-    //     console.debug(`Ignoring message from origin: ${event.origin}`);
-    //     return;
-    //   }
-
-    //   if (isObject(event.data)) {
-    //     if (event.data.type === 'SET_REFRESH_TOKEN') {
-    //       const token = event.data.token as string;
-    //       this.authTokenManager.receiveRefreshToken(token);
-    //     } else if (event.data.type === 'SET_THEME') {
-    //       const theme = event.data.theme as 'light' | 'dark';
-    //       this.theme.setTheme(theme === 'light' ? ThemeName.Light : ThemeName.Dark);
-    //     }
-    //   }
-    // });
   }, []);
 
   const onSend = useCallback(() => {
@@ -59,13 +42,13 @@ export function AppMessage() {
       <div className='flex gap-3 mt-4 justify-center'>
         <button
           className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
-          disabled={!isListening}
+          disabled={isListening}
           onClick={onListen}>
           LISTEN
         </button>
         <button
           className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
-          disabled={isListening}
+          disabled={!isListening}
           onClick={onSend}>
           SEND
         </button>
