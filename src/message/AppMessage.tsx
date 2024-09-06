@@ -2,17 +2,17 @@ import { useCallback, useState } from 'react';
 
 export function AppMessage() {
   const [isListening, isListeningSet] = useState(false);
-  const [text, textSet] = useState('');
+  const [text, textSet] = useState<string[]>([]);
 
   const onListen = useCallback(() => {
     const handler = (e: MessageEvent) => {
       console.log('PARENT', e.origin, e.data);
-      textSet(v => `${v}\\nPARENT: ${JSON.stringify(e.data)}`);
+      textSet(v => [...v, `PARENT: ${e.origin} - ${JSON.stringify(e.data)}`]);
     };
 
     const handlerTop = (e: MessageEvent) => {
       console.log('TOP', e.origin, e.data);
-      textSet(v => `${v}\\TOP: ${JSON.stringify(e.data)}`);
+      textSet(v => [...v, `TOP: ${e.origin} - ${JSON.stringify(e.data)}`]);
     };
 
     window.addEventListener('message', handler);
@@ -23,7 +23,7 @@ export function AppMessage() {
     isListeningSet(true);
 
     return () => {
-      window.parent.removeEventListener('message', handler);
+      window.removeEventListener('message', handler);
       if (window.top) {
         window.top.removeEventListener('message', handlerTop);
       }
@@ -31,9 +31,11 @@ export function AppMessage() {
   }, []);
 
   const onSend = useCallback(() => {
-    window.parent.postMessage({ type: 'TEST', data: 'test' }, 'origin');
+    if (window.parent) {
+      window.parent.postMessage({ type: 'TEST PARENT', data: 'test parent' }, 'origin parent');
+    }
     if (window.top) {
-      window.top.postMessage({ type: 'TEST TOP', data: 'test' }, 'origin');
+      window.top.postMessage({ type: 'TEST TOP', data: 'test top' }, 'origin top');
     }
   }, []);
 
@@ -54,7 +56,11 @@ export function AppMessage() {
         </button>
       </div>
 
-      <div className='flex gap-3 justify-center'>{text}</div>
+      <div className='flex gap-3 justify-center'>
+        {text.map((txt, i) => (
+          <div key={i}>{txt}</div>
+        ))}
+      </div>
     </main>
   );
 }
