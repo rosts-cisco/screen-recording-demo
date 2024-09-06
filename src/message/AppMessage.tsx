@@ -56,9 +56,11 @@ export function AppMessage() {
         </button>
       </div>
 
-      <div className='flex gap-3 justify-center'>
+      <div className='flex flex-col gap-1 text-xs w-full'>
         {text.map((txt, i) => (
-          <div key={i}>{txt}</div>
+          <div className='text-center odd:bg-slate-200' key={i}>
+            {txt}
+          </div>
         ))}
       </div>
     </main>
