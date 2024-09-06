@@ -14,7 +14,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: path.resolve(__dirname, 'src', '/index.html'),
-        'app-minimal': path.resolve(__dirname, 'src', '/minimal//index.html'),
+        'app-minimal': path.resolve(__dirname, 'src', '/minimal/index.html'),
+        'app-message': path.resolve(__dirname, 'src', '/message/index.html'),
       },
     },
   },
