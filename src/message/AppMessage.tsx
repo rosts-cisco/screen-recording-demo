@@ -32,10 +32,10 @@ export function AppMessage() {
 
   const onSend = useCallback(() => {
     if (window.parent) {
-      window.parent.postMessage({ type: 'TEST PARENT', data: 'test parent' }, 'origin parent');
+      window.parent.postMessage({ type: 'TEST PARENT', data: 'test parent' }, '*');
     }
     if (window.top) {
-      window.top.postMessage({ type: 'TEST TOP', data: 'test top' }, 'origin top');
+      window.top.postMessage({ type: 'TEST TOP', data: 'test top' }, '*');
     }
   }, []);
 
