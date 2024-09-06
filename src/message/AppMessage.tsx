@@ -10,23 +10,23 @@ export function AppMessage() {
       textSet(v => [...v, `PARENT: ${e.origin} - ${JSON.stringify(e.data)}`]);
     };
 
-    const handlerTop = (e: MessageEvent) => {
-      console.log('TOP', e.origin, e.data);
-      textSet(v => [...v, `TOP: ${e.origin} - ${JSON.stringify(e.data)}`]);
-    };
+    // const handlerTop = (e: MessageEvent) => {
+    //   console.log('TOP', e.origin, e.data);
+    //   textSet(v => [...v, `TOP: ${e.origin} - ${JSON.stringify(e.data)}`]);
+    // };
 
     window.addEventListener('message', handler);
-    if (window.top) {
-      window.top.addEventListener('message', handlerTop);
-    }
+    // if (window.top) {
+    //   window.top.addEventListener('message', handlerTop);
+    // }
 
     isListeningSet(true);
 
     return () => {
       window.removeEventListener('message', handler);
-      if (window.top) {
-        window.top.removeEventListener('message', handlerTop);
-      }
+      // if (window.top) {
+      //   window.top.removeEventListener('message', handlerTop);
+      // }
     };
   }, []);
 
