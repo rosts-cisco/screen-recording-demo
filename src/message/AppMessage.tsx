@@ -23,7 +23,6 @@ export function AppMessage() {
     isListeningSet(true);
 
     textSet(v => [...v, `${window.parent} - ${window.top}`]);
-    textSet(v => [...v, `${window.parent.origin} - ${window.top?.origin}`]);
     textSet(v => [...v, `${window.parent === window.top} - ${window.parent !== window.top}`]);
 
     return () => {
