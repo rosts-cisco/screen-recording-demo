@@ -17,6 +17,10 @@ export function AppMessage() {
   }, []);
 
   const onSend = useCallback(() => {
+    console.log('>>>> window.parent', window.parent);
+    console.log('>>>> window.top', window.top);
+    console.log('>>>> COMPARE', window.parent !== window.top);
+
     if (window.parent) {
       window.parent.postMessage({ type: 'TEST PARENT', data: 'test parent' }, '*');
     }
