@@ -10,27 +10,10 @@ export function AppMessage() {
       textSet(v => [...v, `PARENT: ${e.origin} - ${JSON.stringify(e.data)}`]);
     };
 
-    // const handlerTop = (e: MessageEvent) => {
-    //   console.log('TOP', e.origin, e.data);
-    //   textSet(v => [...v, `TOP: ${e.origin} - ${JSON.stringify(e.data)}`]);
-    // };
-
     window.addEventListener('message', handler);
-    // if (window.top) {
-    //   window.top.addEventListener('message', handlerTop);
-    // }
-
     isListeningSet(true);
 
-    textSet(v => [...v, `${window.parent} - ${window.top}`]);
-    textSet(v => [...v, `${window.parent === window.top} - ${window.parent !== window.top}`]);
-
-    return () => {
-      window.removeEventListener('message', handler);
-      // if (window.top) {
-      //   window.top.removeEventListener('message', handlerTop);
-      // }
-    };
+    return () => window.removeEventListener('message', handler);
   }, []);
 
   const onSend = useCallback(() => {
