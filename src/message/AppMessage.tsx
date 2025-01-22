@@ -1,32 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 export function AppMessage() {
-  const [isListening, isListeningSet] = useState(false);
-  const [text, textSet] = useState<string[]>([]);
-
-  const onListen = useCallback(() => {
-    const handler = (e: MessageEvent) => {
-      console.log('PARENT', e.origin, e.data);
-      textSet(v => [...v, `PARENT: ${e.origin} - ${JSON.stringify(e.data)}`]);
-    };
-
-    window.addEventListener('message', handler);
-    isListeningSet(true);
-
-    return () => window.removeEventListener('message', handler);
-  }, []);
-
-  const onSend = useCallback(() => {
-    console.log('>>>> window.parent', window.parent);
-    console.log('>>>> window.top', window.top);
-    console.log('>>>> COMPARE', window.parent !== window.top);
-
-    if (window.parent) {
-      window.parent.postMessage({ type: 'TEST PARENT', data: 'test parent' }, '*');
-    }
-    if (window.top) {
-      window.top.postMessage({ type: 'TEST TOP', data: 'test top' }, '*');
-    }
+  const onCheck = useCallback(() => {
+    console.log('>> document.referrer', document.referrer);
+    console.log('>> document.location.ancestorOrigins', document.location.ancestorOrigins);
   }, []);
 
   return (
@@ -34,24 +11,9 @@ export function AppMessage() {
       <div className='flex gap-3 mt-4 justify-center'>
         <button
           className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
-          disabled={isListening}
-          onClick={onListen}>
-          LISTEN
+          onClick={onCheck}>
+          CHECK
         </button>
-        <button
-          className='w-40 bg-slate-300 hover:bg-slate-400 hover:disabled:bg-slate-300 disabled:opacity-25'
-          disabled={!isListening}
-          onClick={onSend}>
-          SEND
-        </button>
-      </div>
-
-      <div className='flex flex-col gap-1 text-xs w-full'>
-        {text.map((txt, i) => (
-          <div className='text-center odd:bg-slate-200' key={i}>
-            {txt}
-          </div>
-        ))}
       </div>
     </main>
   );
