@@ -1,6 +1,6 @@
 export function App() {
   return (
-    <main className='p-12 gap-12'>
+    <main className='p-12 gap-12 grow bg-neutral-800'>
       <iframe
         src='https://videa-web-rosts.uscentral1-0.vint.vidcast.io/share/embed/7f7e2fef-f7b4-4bc6-b41d-a80e21a85bf1'
         width='540px'

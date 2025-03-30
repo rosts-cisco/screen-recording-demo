@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply h-full;
+  }
   body {
-    @apply bg-slate-50;
+    @apply flex min-h-full flex-col bg-slate-50;
   }
 }
