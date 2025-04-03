@@ -1,6 +1,6 @@
 export function AppEmbed() {
   return (
-    <main className='p-12 gap-12 grow flex flex-row bg-neutral-800 text-neutral-500'>
+    <main className='p-6 gap-12 grow flex flex-row bg-neutral-800 text-neutral-500'>
       <div>
         video
         <iframe
@@ -15,7 +15,7 @@ export function AppEmbed() {
       <div>
         playlist
         <iframe
-          src='https://integration.vidcast.io/playlists/embed/c1d47c89-4274-4817-b84e-33ba9f8c9e81'
+          src='https://integration.vidcast.io/playlists/embed/c1d47c89-4274-4817-b84e-33ba9f8c9e81?theme=light'
           width='540px'
           height='330px'
           loading='lazy'
