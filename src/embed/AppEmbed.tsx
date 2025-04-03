@@ -1,12 +1,12 @@
 export function AppEmbed() {
   return (
-    <main className='p-12 gap-12 grow flex flex-row bg-neutral-800 text-neutral-300'>
+    <main className='p-12 gap-12 grow flex flex-row bg-neutral-800 text-neutral-500'>
       <div>
         video
         <iframe
           src='https://integration.vidcast.io/share/embed/7f7e2fef-f7b4-4bc6-b41d-a80e21a85bf1'
           width='540px'
-          height='304px'
+          height='330px'
           loading='lazy'
           allow='fullscreen *;autoplay *;'
         />
@@ -17,7 +17,7 @@ export function AppEmbed() {
         <iframe
           src='https://integration.vidcast.io/playlists/embed/c1d47c89-4274-4817-b84e-33ba9f8c9e81'
           width='540px'
-          height='304px'
+          height='330px'
           loading='lazy'
           allow='fullscreen *;autoplay *;'
         />
