@@ -15,7 +15,7 @@ export default defineConfig({
       input: {
         app: path.resolve(__dirname, 'src', '/index.html'),
         'app-minimal': path.resolve(__dirname, 'src', '/minimal/index.html'),
-        'app-iframe': path.resolve(__dirname, 'src', '/iframe/index.html'),
+        'app-embed': path.resolve(__dirname, 'src', '/embed/index.html'),
       },
     },
   },

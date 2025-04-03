@@ -1,4 +1,4 @@
-export function App() {
+export function AppEmbed() {
   return (
     <main className='p-12 gap-12 grow flex flex-row bg-neutral-800 text-neutral-300'>
       <div>
